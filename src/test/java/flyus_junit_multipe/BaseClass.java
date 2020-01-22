@@ -498,11 +498,6 @@ public class BaseClass
 				}
 			}
 			
-			
-			
-			
-			
-			
 		}
 		
 
