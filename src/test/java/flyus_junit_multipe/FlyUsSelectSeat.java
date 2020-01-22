@@ -11,10 +11,11 @@ import org.openqa.selenium.support.ui.Select;
 public class FlyUsSelectSeat extends BaseClass {
 
 	public static void main(String[] args) throws Throwable {
-		 oneWay2AE();
+		oneWay2A2C2IE();
 	}
 	
-	public static int oneWay2AE() throws Throwable
+	//2 adults 2 children 2 Infants Economy class
+	public static int oneWay2A2C2IE() throws Throwable
 	{
 
 
@@ -37,37 +38,84 @@ public class FlyUsSelectSeat extends BaseClass {
 		Thread.sleep(1000);
 		//one adult is selected by default .so clicking only one the '+' button to add one
 		//more adult passenger
+		int adultCount=1;
+		for(int i=1; i<2;i++)
+		{
 		findByXpath("(//a[text()='+'])[1]").click();
+		adultCount++;
+		}
+		System.out.println("number of adults added = " +adultCount);
+		//select 2 children
+		int childrenCount =0;
+		for(int i =1; i<=2;i++)
+		{
+		findByXpath("(//a[text()='+'])[2]").click();
+		childrenCount++;
+		}
+		System.out.println("number of children added = " +childrenCount);
 
+		//select 2 infants
+		int infantCount=0;
+		for(int i=1; i<=2; i++)
+		{
+		findByXpath("(//a[text()='+'])[3]").click();
+		infantCount++;
+		}
+		System.out.println("number of infants added = " +infantCount);
 
+		//click submit or search button
 		findByXpath("//button[@type='submit']").click();
+		
 		driver.manage().timeouts().implicitlyWait(40, TimeUnit.SECONDS);
 		findByXpath("(//button[@ng-click='paModalCtrl.close()'])[1]").click();
 		findByXpath("(//img[@src='img/white-arrow-continue.svg'])[1]").click();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
-		//adult passenger 1 details
-		selectByVisibleText(findByXpath("//select[@id='title-pax-0']"), "Mr.");
-		selectByVisibleText(findByXpath("//select[@id='gender-pax-0']"), "Male");
-		List<String> name = excelReadRow("C:\\Users\\sathishPC\\Desktop\\selenium\\Programs\\ThridProjectFlyUs\\ExcelFiles\\ExcelInputGivingFile.xlsx", "Sheet0", 2);
-		fillText(findByXpath("//input[@id='fname-pax-0']"), name.get(0) );
-		fillText(findByXpath("//input[@id='lname-pax-0']"), name.get(1));
-		findByXpath("//input[@id='paxes-ADULT-0-dob']").click();
-		fillText(findByXpath("//input[@id='paxes-ADULT-0-dob']"),  name.get(2));
+		//adult passenger details
+		int i=0;
+		for( i=0; i<adultCount;i++)
+		{
+		List<String> adultsDetails = new ArrayList<String>(); 
+		adultsDetails = excelReadRow("C:\\Users\\sathishPC\\Desktop\\selenium\\Programs\\FlyUsUsingJUnitMultipleTestCases\\ExcelFiles\\AdultsRecords.xlsx", "Sheet1", (i+1));
+		selectByVisibleText(findByXpath("//select[@id='title-pax-"+i+"']"), adultsDetails.get(0));
+		selectByVisibleText(findByXpath("//select[@id='gender-pax-"+i+"']"), adultsDetails.get(1));
+		fillText(findByXpath("//input[@id='fname-pax-"+i+"']"), adultsDetails.get(2) );
+		fillText(findByXpath("//input[@id='lname-pax-"+i+"']"), adultsDetails.get(3));
+		findByXpath("//input[@id='paxes-ADULT-"+i+"-dob']").click();
+		fillText(findByXpath("//input[@id='paxes-ADULT-"+i+"-dob']"),  adultsDetails.get(4));
+		}
 
+		//children passenger details
+		for(int k=0; k<childrenCount; k++)
+		{	List<String> childrenDetails = new ArrayList<String>(); 
+			childrenDetails = excelReadRow("C:\\Users\\sathishPC\\Desktop\\selenium\\Programs\\FlyUsUsingJUnitMultipleTestCases\\ExcelFiles\\ChildrenRecords.xlsx", "Sheet1", (k+1));
+			scrollDown(findByXpath("//select[@id='title-pax-"+i+"']"));
+			selectByVisibleText(findByXpath("//select[@id='title-pax-"+i+"']"), childrenDetails.get(0));
+			selectByVisibleText(findByXpath("//select[@id='gender-pax-"+i+"']"), childrenDetails.get(1));
+			fillText(findByXpath("//input[@id='fname-pax-"+i+"']"), childrenDetails.get(2) );
+			fillText(findByXpath("//input[@id='lname-pax-"+i+"']"), childrenDetails.get(3));
+			findByXpath("//input[@id='paxes-CHILDREN-"+i+"-dob']").click();
+			fillText(findByXpath("//input[@id='paxes-CHILDREN-"+i+"-dob']"),  childrenDetails.get(4));
+			i++;
 
-
-		//adult passenger 2 details
-		List<String> passengerdetails2 = excelReadRow("C:\\\\Users\\\\sathishPC\\\\Desktop\\\\selenium\\\\Programs\\\\FlyUsUsingJUnitMultipleTestCases\\\\ExcelFiles\\\\ExcelInputGivingFile.xlsx", "Sheet0", 3);
-
-		scrollDown(findByXpath("//select[@id='title-pax-1']"));
-		selectByVisibleText(findByXpath("//select[@id='title-pax-1']"), "Ms.");
-		selectByVisibleText(findByXpath("//select[@id='gender-pax-1']"), "Female");
-		fillText(findByXpath("//input[@id='fname-pax-1']"), passengerdetails2.get(0) );
-		fillText(findByXpath("//input[@id='lname-pax-1']"), passengerdetails2.get(1));
-		findByXpath("//input[@id='paxes-ADULT-1-dob']").click();
-		fillText(findByXpath("//input[@id='paxes-ADULT-1-dob']"),  passengerdetails2.get(2));
+		}
 		
+		//infant passengers details
+		for(int l=0; l<infantCount;l++)
+		{
+			List<String> infantDetails = new ArrayList<String>(); 
+			infantDetails = excelReadRow("C:\\Users\\sathishPC\\Desktop\\selenium\\Programs\\FlyUsUsingJUnitMultipleTestCases\\ExcelFiles\\InfantsRecord.xlsx", "Sheet1", (l+1));
+			scrollDown(findByXpath("//select[@id='title-pax-"+i+"']"));
+			selectByVisibleText(findByXpath("//select[@id='title-pax-"+i+"']"), infantDetails.get(0));
+			selectByVisibleText(findByXpath("//select[@id='gender-pax-"+i+"']"), infantDetails.get(1));
+			fillText(findByXpath("//input[@id='fname-pax-"+i+"']"), infantDetails.get(2) );
+			fillText(findByXpath("//input[@id='lname-pax-"+i+"']"), infantDetails.get(3));
+			findByXpath("//input[@id='paxes-INFANT-"+i+"-dob']").click();
+			fillText(findByXpath("//input[@id='paxes-INFANT-"+i+"-dob']"),  infantDetails.get(4));
+			i++;
+		}
+
+	
 		//select seat
 		if(findByXpath("//a[contains(text(),'Select Your Seat')]").isDisplayed())
 		{
@@ -89,16 +137,24 @@ public class FlyUsSelectSeat extends BaseClass {
 			sumOfAllPassengers=sumOfAllPassengers+noOfPassengersInteger;
 		}
 		System.out.println("total number of passenger:" +sumOfAllPassengers);
+		
+		//total number of infants	
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-		List<WebElement> selectSeatsWebElements = driver.findElements(By.xpath("(//tbody)[3]//tr//td//img[@src='img/sm/seat-available.png']"));
-		System.out.println("Total number of available seats:" +selectSeatsWebElements.size());
-	//	selectSeatsWebElements.get(0).click();
+		String infantsString = findByXpath("((//div[@class='wrapper'])[2]//div[@class='clearfix ng-scope']//span[@class='clear font-bold ng-binding'])[3]").getText();
+		char c1 =infantsString.charAt(infantsString.length()-1);
+		String noOfInfantsString = String.valueOf(c1);
+		int noOfInfantsInteger = Integer.valueOf(noOfInfantsString);
+		
+		
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		List<WebElement> noOfSelectableSeatsWebelements = driver.findElements(By.xpath("(//tbody)[3]//tr//td//img[@src='img/sm/seat-available.png']"));
+		System.out.println("Total number of available seats:" +noOfSelectableSeatsWebelements.size());
 
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		int count=0;
-		for(int i=0; i<sumOfAllPassengers; i++)
+		for(int m=0; m<(sumOfAllPassengers-noOfInfantsInteger); m++)
 		{
-			selectSeatsWebElements.get(i).click();
+			noOfSelectableSeatsWebelements.get(m).click();
 			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			Select s = new Select(findByXpath("(//select[@data-ng-model='ckCtrl.smInfo.selPaxSeat'])[1]"));
 			List<WebElement> allNameOptionsInSeatSelect = s.getOptions();
@@ -109,16 +165,16 @@ public class FlyUsSelectSeat extends BaseClass {
 			}
 			
 			if(count==0) {
-			s.selectByVisibleText( allNames.get(i+1));
+			s.selectByVisibleText( allNames.get(m+1));
 			//we cant give get(i) at first time above. becaus for the first time
-			//the select will have three itemse
+			//the select will have three items
 			//and index 0 has an empty space.
 			count++;
 			}
 		
 			else
 			{
-				s.selectByVisibleText( allNames.get(i));
+				s.selectByVisibleText( allNames.get(m));
 			}
 			findByXpath("(//button[text()='Select seat'])[1]").click();
 			Thread.sleep(1000);	
@@ -128,20 +184,6 @@ public class FlyUsSelectSeat extends BaseClass {
 		findByXpath("(//img[@src='img/red-close.svg'])[2]").click();
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-		
-		//billing details
-		fillText(findByXpath("//input[@id='cc-first-name']"), name.get(0));
-		fillText(findByXpath("//input[@id='cc-last-name']"), name.get(1));
-		fillText(findByXpath("(//input[@id='billing-address'])[1]"), name.get(3));
-		selectByVisibleText(findByXpath("//select[@id='cc-country']"), "India");
-		Thread.sleep(2000);
-		selectByVisibleText(findByXpath("//select[@id='cc-region']"), "Tamil Nadu");
-		fillText(findByXpath("//input[@id='cc-city']"), name.get(4));
-		fillText(findByXpath("//input[@id='cc-zip']"), name.get(5));
-		fillText(findByXpath("//input[@id='cc-phone']"), name.get(6));
-		fillText(findByXpath("//input[@id='cc-email']"), name.get(7));
-		fillText(findByXpath("//input[@id='cc-email-conf']"), name.get(7));
-
 		String price = findByXpath("(//span[@id='flyus-grand-total'])[2]").getText();
 		excelWriteSingleCell("C:\\Users\\sathishPC\\Desktop\\selenium\\Programs\\FlyUsUsingJUnitMultipleTestCases\\ExcelFiles\\OneWayTwoAdultEconomy.xlsx", "sheet1", 0, 0, price);
 
@@ -150,10 +192,6 @@ public class FlyUsSelectSeat extends BaseClass {
 		driver.quit();
 
 		return sumOfAllPassengers;
-
-
-
-
 	}
 	
 }

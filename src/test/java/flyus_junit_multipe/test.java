@@ -12,13 +12,15 @@ import org.openqa.selenium.WebElement;
 public class test extends BaseClass {
 
 	
-	public static void selectDateOneWay()
-	{}
-	
 	public static void main(String[] args) throws IOException {
-		List<String> str = excelReadRow("C:\\Users\\sathishPC\\Desktop\\selenium\\Programs\\FlyUsUsingJUnitMultipleTestCases\\ExcelFiles\\ExcelInputGivingFile.xlsx", "Sheet0", 3);
+		
+		for(int i=0; i<=5; i++)
+		{
+		List<String> str = excelReadRow("C:\\Users\\sathishPC\\Desktop\\selenium\\Programs\\FlyUsUsingJUnitMultipleTestCases\\ExcelFiles\\AdultsRecords.xlsx", "Sheet1", i);
 		for (String string : str) {
 			System.out.println(string);
+			
+		}
 		}
 	}
 }
